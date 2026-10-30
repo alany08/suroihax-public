@@ -1,0 +1,100 @@
+[
+    {
+        "name": "Ceiling Transparency",
+        "type": "regex",
+        "match": "ceilingVisible=(.+?)\\,",
+        "replace": "ceilingVisible=false,",
+        "all": true
+    },
+    {
+        "name": "Ceiling Transparency More",
+        "type": "regex",
+        "match": "this\\.ceilingContainer,to:{alpha:(.)}",
+        "replace": "this.ceilingContainer,to:{alpha:0}",
+        "all": true
+    },
+    {
+        "name": "Export game context & Draw Flashlight",
+        "type": "regex",
+        "match": "this\\.startGame\\((.)\\.output\\);",
+        "replace": "(window.aimbot_var.game = this,this.startGame($1.output));",
+        "all": false
+    },
+    {
+        "name": "Ceiling Transparency 2",
+        "type": "regex",
+        "match": "this.ceilingContainer.addChild\\((.)\\)",
+        "replace": "(() => {this.ceilingContainer.addChild($1);if(![\"container_1\", \"container_2\", \"oil_tanker_tanks\"].includes(this.definition.idString)){  this.ceilingContainer.alpha = 0; }})()",
+        "all": false
+    },
+    {
+        "name": "Inject Aimbot & Spinbot & EmoteSpam",
+        "type": "regex",
+        "match": "update\\(\\)\\{const (.)\\=\\{movement",
+        "replace": "update(){if((window.aimbot_var.data.aimbot_override.enabeled &&window.aimbot_var.data.aimbot_override.status) || ((this.attacking ||window.aimbot_var.data.attacking) &&window.aimbot_var.settings.aimbot_enabeled &&0 != Object.keys(window.aimbot_var.data.enemies).length &&(window.aimbot_var.data.aimbot_override.enabeled ?window.aimbot_var.data.aimbot_override.status :true))){window.aimbot_var.data.attacking = true;let x = window.aimbot_var.data.fakemousepos[0];let y = window.aimbot_var.data.fakemousepos[1];this.rotation = Math.atan2(y-window.innerHeight/2,x-window.innerWidth/2);/*this function converts on screen pos to game pos*20 (pixi scale)*/var mouse = window.aimbot_var.game.camera.container.toLocal({x: x, y: y});this.distanceToMouse = Math.sqrt(((mouse.x/20) - window.aimbot_var.game.activePlayer.position.x)**2 +((mouse.y/20) - window.aimbot_var.game.activePlayer.position.y)**2); /*20 is pixi_scale*/ /*fix this later: https://github.com/HasangerGames/suroi/blob/master/client/src/scripts/managers/inputManager.ts line 264*//*console.log(this.distanceToMouse);*/this.turning = true;this.game.activePlayer.container.rotation = this.rotation}const $1={movement",
+        "all": false
+    },
+    {
+        "name": "Flint Stone Enlarge",
+        "type": "regex",
+        "match": "setRotation\\((.)\\.rotation\\)\\.setZIndex\\((.)\\.zIndex\\?\\?(.)\\.ObstaclesLayer1\\);",
+        "replace": "setRotation($1.rotation).setZIndex(['flint_stone', 'flint_stone_winter'].includes($1.definition.idString) ? 999999999 : ($2.zIndex??$3.ObstaclesLayer1));if(['flint_stone', 'flint_stone_winter'].includes($1.definition.idString)){$1.scale = 5; $2.tint = 0xff0000}",
+        "all": false
+    },
+    {
+        "name": "Autoloot",
+        "type": "regex",
+        "match": "\\(this\\.inputManager\\.isMobile\\&\\&(.)\\)",
+        "replace": "(window.aimbot_var.settings.autoloot&&$1)",
+        "all": false
+    },
+    {
+        "name": "Preserve Throwable Def.",
+        "type": "regex",
+        "match": "this\\.updateFromData\\(([a-zA-Z])\\)}updateFromData\\(([a-zA-Z]),([a-zA-Z])=!1\\)\\{var ([a-zA-Z])\\;if\\(",
+        "replace": "this.updateFromData($1)}updateFromData($2,$3=!1){if($2.full){this._definition = $2.full.definition}var $4;if(",
+        "all": false
+    },
+    {
+        "name": "Prevent Infinite Reload (suroi bug)",
+        "type": "regex",
+        "match": "nextSwitchTime-Date\\.now\\(\\);if\\((.)\\<0\\)\\{location\\.reload\\(\\);",
+        "replace": "nextSwitchTime-Date.now();if($1<0){",
+        "all": false
+    },
+    {
+        "name": "Fix Monkeypatched WebSocket Class",
+        "type": "replace",
+        "match": "WebSocket.OPEN",
+        "replace": "1",
+        "all": false
+    },
+    {
+        "name": "Imported Resource URL",
+        "type": "replace",
+        "match": "from\"./",
+        "replace": "from\"https://suroi.io/scripts/",
+        "all": true
+    },
+    {
+        "name": "Imported Resource URL (2)",
+        "type": "replace",
+        "match": "import\"./",
+        "replace": "import\"https://suroi.io/scripts/",
+        "all": true
+    },
+    {
+        "name": "Imported Resource URL (3)",
+        "type": "replace",
+        "match": "import(\"./_virtual",
+        "replace": "import(\"https://suroi.io/scripts/_virtual",
+        "all": true
+    },
+    {
+        "name": "RSh House Highlight",
+        "type": "regex",
+        "match": "for\\(const (.) of (.)\\.(floorImages|ceilingImages)\\)\\{const (.)\\=new (.)\\((.)\\.key\\)\\.setVPos",
+        "replace": "for(const $1 of $2.$3){const $4=new $5($6.key);if(['blue_house_special'].includes($2.idString)){$1.tint=0x555555};if(['blue_house'].includes($2.idString)){$1.tint=0xffffff};$4.setVPos",
+        "all": true
+    }
+]
